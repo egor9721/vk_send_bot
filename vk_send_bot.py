@@ -112,7 +112,7 @@ class send_bot(object):
 if __name__ == '__main__':
    
     intro()
-        while True:
+    while True:
         users = input('введите полный путь до файла со списком пользователей\n')
         if os.path.isfile(users):
             break

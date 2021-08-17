@@ -112,17 +112,26 @@ class send_bot(object):
 if __name__ == '__main__':
    
     intro()
-    users = input('введите полный путь до файла со списком пользователей\n')
-    message = input('введите полный путь до файла с сообщением\n')
-    token_change = int(input('Выберите от какого сообщества хотите отправить рассылку: 1 - Ягодное, 2 - клуб "Ягодка"\n'))
-    if token_change == 1:
-        print('Рассылка будет осуществлена от сообщества "Ягодное"')
-        token = config.TOKEN_YAGODNOE
-    elif token_change == 2:
-        print('Рассылка будет осуществлена от сообщества "клуб " Ягодка""')
-        token = config.TOKEN_YAGODKA
-    else:
-        print('выбранного вами сообщества не существует')
+        while True:
+        users = input('введите полный путь до файла со списком пользователей\n')
+        if os.path.isfile(users):
+            break
+    while True:
+        message = input('введите полный путь до файла с сообщением\n')
+        if os.path.isfile(message):
+            break
+    while True:
+        token_change = int(input('Выберите от какого сообщества хотите отправить рассылку: 1 - Ягодное, 2 - клуб "Ягодка"\n'))
+        if token_change == 1:
+            print('Рассылка будет осуществлена от сообщества "Ягодное"')
+            token = config.TOKEN_YAGODNOE
+            break
+        elif token_change == 2:
+            print('Рассылка будет осуществлена от сообщества "клуб " Ягодка""')
+            token = config.TOKEN_YAGODKA
+            break
+        else:
+            print('выбранного вами сообщества не существует')
     
     bot = send_bot(token=token, users=users, message=message)
     bot.send_message()

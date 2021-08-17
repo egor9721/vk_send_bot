@@ -5,6 +5,7 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 import random 
 import re
 import urllib.request as req
+import os
 
 import config
 
@@ -66,7 +67,10 @@ class send_bot(object):
                 users_list.append(line)
 
         for user in users_list:
-            user = re.sub('\n', '', re.split('com/', user)[1])
+            try:
+                user = re.sub('\n', '', re.split('com/', user)[1])
+            except IndexError:
+                pass
             if acc_check(user):
                 users_id.append(user)
             else:

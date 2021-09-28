@@ -1,34 +1,20 @@
-from logging import error
 import vk_api
-from vk_api import longpoll
-from vk_api.longpoll import VkLongPoll, VkEventType
+from vk_api.longpoll import VkLongPoll
 import random 
 import re
 import urllib.request as req
-import os
 
-import config
-
-def intro():
-    print('Это демка приложения для рассылки сообщений пользователям.')
-    print('Функционал приложения следующий:')
-    print('1. Составьте список пользователей, которым хотите отправить сообщение (каждый адрес с новой строки, формат файла .txt)')
-    print('2. Сформируйте сообщение которое хотите отправить (формат файла .txt)')
-    print('3. укажите полный путь до файла с пользователями')
-    print('4. укажите полный путь до файла с сообщением')
-    print('5. Выберете от какого сообщества хотите отправить рассылку\n')
-    print('ВАЖНО: приложение отправит сообщение только тем пользователям, которые разрешили отправку сообщения от сообщества которое вы выбрали.\n'
-        'в противном случае сообщение не будет отправлено (список пользователей, которым не удалось отправить сообщение будет выведен после окончания работы программы)\n\n')
 
 def acc_check(id):
-    addres = 'https://vk.com/' + id
+    address = 'https://vk.com/' + id
 
     try:
-        req.urlopen(addres).getcode()
+        req.urlopen(address).getcode()
         result = True
     except:
         result = False
     return result
+
 
 def error_stats(dont_send, dont_exist):
     print('----------------------------------------------------')
@@ -46,6 +32,7 @@ def error_stats(dont_send, dont_exist):
         print(user)
     print('\n----------------------------------------------------')
     pass
+
 
 class send_bot(object):
 
@@ -110,33 +97,3 @@ class send_bot(object):
         print('Сообщение было доставлено {} пользователь из {}\n'.format(count, len(recipients)))
         
         error_stats(dont_send_message, error_data)
-
-
-
-if __name__ == '__main__':
-   
-    intro()
-    while True:
-        users = input('введите полный путь до файла со списком пользователей\n')
-        if os.path.isfile(users):
-            break
-    while True:
-        message = input('введите полный путь до файла с сообщением\n')
-        if os.path.isfile(message):
-            break
-    while True:
-        token_change = int(input('Выберите от какого сообщества хотите отправить рассылку: 1 - Ягодное, 2 - клуб "Ягодка"\n'))
-        if token_change == 1:
-            print('Рассылка будет осуществлена от сообщества "Ягодное"')
-            token = config.TOKEN_YAGODNOE
-            break
-        elif token_change == 2:
-            print('Рассылка будет осуществлена от сообщества "клуб " Ягодка""')
-            token = config.TOKEN_YAGODKA
-            break
-        else:
-            print('выбранного вами сообщества не существует')
-    
-    bot = send_bot(token=token, users=users, message=message)
-    bot.send_message()
-    input('нажмите Enter чтобы выйти')

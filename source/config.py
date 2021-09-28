@@ -1,1 +1,0 @@
-TOKEN_ягодка = '9975fbbe8bfac82302125363a245fb6fb8880dedc2ce00aa11784ac7114adbe39b5e76d6b0ac713d98a0e'

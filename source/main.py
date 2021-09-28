@@ -1,5 +1,6 @@
 import re
 import interface
+import os
 
 
 def write_config(name, token):
@@ -9,6 +10,9 @@ def write_config(name, token):
 
 
 def read_config():
+    if not os.path.isfile('config.py'):
+        with open('config.py', 'w') as f:
+            pass
     with open('config.py', 'r') as f:
         tokens = f.readlines()
     communities = {}

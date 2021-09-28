@@ -12,20 +12,20 @@ def main_window():
          ],
         [sg.Text('Сообщение', size=(15, 1)), sg.InputText(key='message.txt'), sg.FileBrowse('Поиск')
          ],
-        [sg.Text('Выбор сообщества', size=(20, 1)), sg.Combo(list(main.read_config()), key='community', size=(15, 1)), sg.Button('add')],
+        [sg.Text('Выбор сообщества', size=(20, 1)), sg.Combo(list(main.read_config()), key='community', size=(15, 1)), sg.Button('Добавить')],
         [sg.Output(size=(88, 20))],
-        [sg.Submit(), sg.Cancel()]
+        [sg.Submit('Начать рассылку'), sg.Cancel('Выйти')]
     ]
 
     window = sg.Window('VK message.txt bot', layout)
     while True:
         event, values = window.read()
-        if event in (None, 'Exit', 'Cancel'):
+        if event in (None, 'Exit', 'Выйти'):
             break
-        if event in 'add':
+        if event in 'Добавить':
             add_com()
             window.Element('community').Update(values=list(main.read_config()))
-        if event in 'Submit':
+        if event in 'Начать рассылку':
             address = values['destination']
             message = values['message.txt']
             comm = values['community']
@@ -44,25 +44,25 @@ def add_com():
     layout = [
         [sg.Text('Name'), sg.InputText(key='new_com_name')],
         [sg.Text('Token'), sg.InputText(key='new_token')],
-        [sg.Submit('Add'), sg.Cancel()]
+        [sg.Submit('Добавить'), sg.Cancel('Отменить')]
     ]
 
-    window = sg.Window('Add new community', layout)
+    window = sg.Window('Добавление нового сообщества', layout)
 
     while True:  # The Event Loop
         event, values = window.read()
-        if event in (None, 'Exit', 'Cancel'):
+        if event in (None, 'Exit', 'Отменить'):
             break
-        if event == 'Add':
+        if event == 'Добавить':
             if values['new_com_name'] and values['new_token']:
                 main.write_config(values['new_com_name'], values['new_token'])
                 break
             elif not values['new_com_name'] and not values['new_token']:
-                print('community name and token is not define')
+                print('Не заданы имя и токен сообщества')
             elif not values['new_com_name']:
-                print('community name is not define')
+                print('Не задано имя сообщества')
             elif not values['new_token']:
-                print('community token is not define')
+                print('Не задан токен сообщества')
     window.close()
 
 

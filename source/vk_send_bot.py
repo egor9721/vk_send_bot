@@ -67,7 +67,10 @@ class send_bot(object):
             if item.startswith(r'id[0-9]'):
                 new_data.append(int(re.sub('id', '', item)))
             else:
-                new_data.append(self.vk.utils.resolveScreenName(screen_name=item)['object_id'])
+                try:
+                    new_data.append(self.vk.utils.resolveScreenName(screen_name=item)['object_id'])
+                except:
+                    error_data.append('https://vk.com/{} - плохая ссылка'.format(item))
 
         print('\nСписок пользователей для отправки составлен')
         return new_data, error_data

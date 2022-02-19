@@ -30,6 +30,7 @@ def acc_check(id):
 
 
 def error_stats(dont_send, dont_exist):
+    ''' переписать в возвращаемый массив строк!!!'''
     print('----------------------------------------------------')
     print('         Статистика по ошибкам отправления')
     print('----------------------------------------------------')
@@ -52,7 +53,11 @@ class send_bot(object):
     def __init__(self, token, users, message):
         vk_session = vk_api.VkApi(token=token)
         # штука для реакции на действия в сообществе
-        self.longpoll = VkLongPoll(vk_session)
+        try:
+            self.longpoll = VkLongPoll(vk_session)
+            self.error = False
+        except vk_api.exceptions.ApiError:
+            self.error = True
         self.vk = vk_session.get_api()
         self.users = users
         self.message = message
@@ -79,7 +84,7 @@ class send_bot(object):
             if acc_check(user):
                 users_id.append(user)
             else:
-                error_data.append('https://vk.com/{}'.format(user))
+                error_data.append('https://vk.com/{} - битая ссылка'.format(user))
 
         for item in users_id:
             if item.startswith(r'id[0-9]'):
@@ -90,7 +95,7 @@ class send_bot(object):
                         screen_name=item)['object_id'])
                 except:
                     error_data.append(
-                        'https://vk.com/{} - плохая ссылка'.format(item))
+                        'https://vk.com/{} - не удалось получить id пользователя'.format(item))
 
         print('\nСписок пользователей для отправки составлен')
         return new_data, error_data
@@ -112,17 +117,20 @@ class send_bot(object):
         count = 0
         dont_send_message = []
         sent_messages = []
-        for user in recipients:
+        for user_id in recipients:
             try:
                 self.vk.messages.send(
-                    user_id=user, message=mess, random_id=random.randint(1, 9999999999))
+                    user_id=user_id, message=mess, random_id=random.randint(1, 9999999999))
                 count += 1
-                sent_messages.append('vk.com/id{}'.format(user))
+                user = self.vk.users.get(user_ids=user_id, fields='screen_name')[0]['screen_name']
+                sent_messages.append('vk.com/{}'.format(user))
             except vk_api.exceptions.ApiError:
-                dont_send_message.append('vk.com/id{}'.format(user))
+                user = self.vk.users.get(user_ids=user_id, fields='screen_name')[0]['screen_name']
+                dont_send_message.append('vk.com/{}'.format(user))
         print('Сообщение было доставлено {} пользователь из {}\n'.format(
             count, len(recipients)))
 
-        error_stats(dont_send_message, error_data)
+        #error_stats(dont_send_message, error_data)
         write_log_file(self.message + "-" + str(time.time()) + ".log", sent_messages,
                        dont_send_message, error_data)
+        return [len(recipients), len(sent_messages), dont_send_message, error_data]

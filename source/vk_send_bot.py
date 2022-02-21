@@ -123,10 +123,10 @@ class send_bot(object):
                     user_id=user_id, message=mess, random_id=random.randint(1, 9999999999))
                 count += 1
                 user = self.vk.users.get(user_ids=user_id, fields='screen_name')[0]['screen_name']
-                sent_messages.append('vk.com/{}'.format(user))
+                sent_messages.append('https://vk.com/{}'.format(user))
             except vk_api.exceptions.ApiError:
                 user = self.vk.users.get(user_ids=user_id, fields='screen_name')[0]['screen_name']
-                dont_send_message.append('vk.com/{}'.format(user))
+                dont_send_message.append('https://vk.com/{}'.format(user))
         print('Сообщение было доставлено {} пользователь из {}\n'.format(
             count, len(recipients)))
 

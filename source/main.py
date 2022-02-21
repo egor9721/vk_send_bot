@@ -1,6 +1,6 @@
 import re
-import interface
 import os
+from gui import gui
 
 
 def write_config(name, token):
@@ -13,7 +13,7 @@ def read_config():
     if not os.path.isfile('config.py'):
         with open('config.py', 'w') as f:
             pass
-    with open('config.py', 'r') as f:
+    with open('config.py', 'r', encoding='utf-8') as f:
         tokens = f.readlines()
     communities = {}
     for token in tokens:
@@ -25,4 +25,4 @@ def read_config():
 
 
 if __name__ == '__main__':
-    interface.main_window()
+    gui.start_gui()

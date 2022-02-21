@@ -8,7 +8,7 @@ import time
 
 def write_log_file(log_file_name, sent_message, dont_sent_message, dont_exist_message):
     print("Запись в лог: " + str(log_file_name))
-    log_file = open(log_file_name, 'w')
+    log_file = open(log_file_name, 'w', encoding='utf-8')
     log_file.write("Сообщения отправлены: \n")
     log_file.write("\n".join(sent_message))
     log_file.write("\nСообщения не получилось доставить: \n")

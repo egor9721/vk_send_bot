@@ -72,9 +72,10 @@ class send_bot(object):
             for line in f:
                 users_list.append(line)
 
+        # TODO: переписать парсинг ссылок на использование полного разбора ссылки по частям
         for user in users_list:
             try:
-                user = re.sub('\n', '', re.split('com/', user)[1])
+                user = re.sub('\n', '', re.split(r'\.*\/', user)[1])
             except IndexError:
                 try:
                     user = re.sub('\n', '', re.split('@', user)[1])

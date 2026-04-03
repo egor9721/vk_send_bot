@@ -4,6 +4,7 @@ import random
 import re
 import urllib.request as req
 import time
+from urllib.parse import urlparse
 
 
 def write_log_file(log_file_name, sent_message, dont_sent_message, dont_exist_message):
@@ -62,6 +63,14 @@ class send_bot(object):
         self.users = users
         self.message = message
 
+    def validate_url_format(self, url):
+        try:
+            result = urlparse(url)
+            # Проверяем наличие схемы (http/https) и домена
+            return all([result.scheme, result.netloc])
+        except Exception:
+            return False
+
     def list_generator(self):
         print('\nСоздается список пользователей для отправки рассылки')
         users_list = []
@@ -74,13 +83,17 @@ class send_bot(object):
 
         # TODO: переписать парсинг ссылок на использование полного разбора ссылки по частям
         for user in users_list:
-            try:
-                user = re.sub('\n', '', re.split(r'\.*\/', user)[1])
-            except IndexError:
+            print(user)
+            if self.validate_url_format(user):
+                user = urlparse(user).path.split('/')[1]
+            else:
                 try:
-                    user = re.sub('\n', '', re.split('@', user)[1])
+                    user = re.sub('\n', '', re.split(r'\.*\/', user)[1])
                 except IndexError:
-                    pass
+                    try:
+                        user = re.sub('\n', '', re.split('@', user)[1])
+                    except IndexError:
+                        pass
 
             if acc_check(user):
                 users_id.append(user)

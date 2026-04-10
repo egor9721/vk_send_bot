@@ -2,7 +2,7 @@ import vk_api
 from vk_api.longpoll import VkLongPoll
 import random
 import re
-import urllib.request as req
+import requests as req
 import time
 
 
@@ -22,7 +22,7 @@ def acc_check(id):
     address = 'https://vk.com/' + id
 
     try:
-        req.urlopen(address).getcode()
+        req.get(address)
         result = True
     except:
         result = False
